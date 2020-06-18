@@ -1,7 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"github.com/DryginAlexander/OpenPlasma/plasma/web"
+)
 
 func main() {
-	fmt.Println("OpenPlasma")
+	web.Init()
 }
