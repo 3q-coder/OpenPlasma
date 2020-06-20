@@ -11,6 +11,7 @@ type Deposit struct {
 }
 
 type Transfer struct {
+	UserId    int
 	From      string
 	To        string
 	Value     int
@@ -32,12 +33,27 @@ type OffchainWithdrawal struct {
 	Signature string
 }
 
+type Storage interface {
+	// user
+	CreateUser(addr string) (*User, error)
+	UserById(id int) (*User, error)
+	UserByAddress(addr string) (*User, error)
+	// deposit
+	CreateDeposit(dep *Deposit) error
+	DepositsByUserId(id int) ([]Deposit, error)
+	// transfer
+	CreateTransfer(trans *Transfer) error
+	TransfersByUserId(id int) ([]Transfer, error)
+	// onchain withdraw
+	CreateOnchainWithdraw(withd *OnchainWithdrawal) error
+	OnchainWithdrawByUserId(id int) ([]OnchainWithdrawal, error)
+	// offchain withdraw
+	CreateOffchainWithdraw(withd *OffchainWithdrawal) error
+	OffchainWithdrawByUserId(id int) ([]OffchainWithdrawal, error)
+}
+
+// TODO make handler
 type Operator interface {
-	CreateUser(user *User) error
-	AddDeposit(dep *Deposit) error
-	AddTransfer(trans *Transfer) error
-	AddOnchainWithdrawal(withd *OnchainWithdrawal) error
-	AddOffchainWithdrawal(withd *OffchainWithdrawal) error
 	ExecuteDeposits() error
 	ExecuteTransfers() error
 	ExecuteOnchainWithdrawals() error
