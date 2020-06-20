@@ -1,0 +1,15 @@
+<!--Embed the header.html template at this location-->
+{{ template "header.html" .}}
+
+<form action="/withdraw" method="post">
+    <label for="from">From:</label>
+    <input type="text" id="from" name="from"><br><br>
+    <label for="to">To:</label>
+    <input type="text" id="to" name="to"><br><br>
+    <label for="value">Value:</label>
+    <input type="text" id="value" name="value"><br><br>
+    <input type="submit" value="Submit">
+</form>
+
+<!--Embed the footer.html template at this location-->
+{{ template "footer.html" .}}

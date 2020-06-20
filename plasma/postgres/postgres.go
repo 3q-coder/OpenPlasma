@@ -1,15 +1,44 @@
-package postges
+package postgres
 
 import (
 	"github.com/DryginAlexander/OpenPlasma/plasma"
 )
 
 type Storage struct {
+	balances            map[int]int
 	users               []plasma.User
 	deposits            []plasma.Deposit
 	transfers           []plasma.Transfer
 	onchainWithdrawals  []plasma.OnchainWithdrawal
 	offchainWithdrawals []plasma.OffchainWithdrawal
+}
+
+func NewStorage() Storage {
+	stor := Storage{
+		balances: make(map[int]int),
+	}
+
+	stor.CreateUser("0x0")
+	stor.CreateUser("0x1")
+
+	stor.CreateDeposit(
+		&plasma.Deposit{
+			UserId: 0,
+			Value:  100,
+		},
+	)
+
+	stor.CreateDeposit(
+		&plasma.Deposit{
+			UserId: 1,
+			Value:  200,
+		},
+	)
+
+	stor.balances[0] = 100
+	stor.balances[1] = 200
+
+	return stor
 }
 
 func (s *Storage) CreateUser(addr string) (*plasma.User, error) {
@@ -77,7 +106,7 @@ func (s *Storage) CreateOnchainWithdraw(withd *plasma.OnchainWithdrawal) error {
 	return nil
 }
 
-func (s *Storage) OnchainWithdrawByUserId(id int) ([]plasma.OnchainWithdrawal, error) {
+func (s *Storage) OnchainWithdrawalsByUserId(id int) ([]plasma.OnchainWithdrawal, error) {
 	var ans []plasma.OnchainWithdrawal
 
 	for _, withd := range s.onchainWithdrawals {
@@ -93,7 +122,7 @@ func (s *Storage) CreateOffchainWithdraw(withd *plasma.OffchainWithdrawal) error
 	return nil
 }
 
-func (s *Storage) OffchainWithdrawByUserId(id int) ([]plasma.OffchainWithdrawal, error) {
+func (s *Storage) OffchainWithdrawalsByUserId(id int) ([]plasma.OffchainWithdrawal, error) {
 	var ans []plasma.OffchainWithdrawal
 
 	for _, withd := range s.offchainWithdrawals {
@@ -102,4 +131,14 @@ func (s *Storage) OffchainWithdrawByUserId(id int) ([]plasma.OffchainWithdrawal,
 		}
 	}
 	return ans, nil
+}
+
+func (s *Storage) ReduceBalance(user_id int, value int) error {
+	s.balances[user_id] -= value
+	return nil
+}
+
+func (s *Storage) IncreaseBalance(user_id int, value int) error {
+	s.balances[user_id] += value
+	return nil
 }

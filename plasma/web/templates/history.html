@@ -1,0 +1,28 @@
+<!--Embed the header.html template at this location-->
+{{ template "header.html" .}}
+
+<h1>Deposits</h1>
+{{range .deposits}}
+  <p>{{.Value}}</p>
+{{end}}
+
+<h1>Transfers</h1>
+{{range .transfers }}
+  <p>{{.To}}</p>
+  <p>{{.Value}}</p>
+{{end}}
+
+<h1>OffChainWithdrawals</h1>
+{{range .offWithdrawals }}
+  <p>{{.To}}</p>
+  <p>{{.Value}}</p>
+{{end}}
+
+<h1>OnChainWithdrawals</h1>
+{{range .offWithdrawals }}
+  <p>{{.To}}</p>
+  <p>{{.Value}}</p>
+{{end}}
+
+<!--Embed the footer.html template at this location-->
+{{ template "footer.html" .}}

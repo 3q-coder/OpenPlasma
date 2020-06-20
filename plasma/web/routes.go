@@ -2,8 +2,13 @@ package web
 
 func initializeRoutes() {
 
-	// Handle the index route
 	Router.GET("/", showIndexPage)
 
-	Router.GET("/article/view/:article_id", getArticle)
+	Router.GET("/transfer", showTransferPage)
+	Router.POST("/transfer", createTransfer)
+
+	Router.GET("/withdraw", showWithdrawPage)
+	Router.POST("/withdraw", createWithdraw)
+
+	Router.GET("/history/:user_id", getUserHistory)
 }

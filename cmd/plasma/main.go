@@ -1,9 +1,13 @@
 package main
 
 import (
+	"github.com/DryginAlexander/OpenPlasma/plasma/operator"
+	"github.com/DryginAlexander/OpenPlasma/plasma/postgres"
 	"github.com/DryginAlexander/OpenPlasma/plasma/web"
 )
 
 func main() {
-	web.Init()
+	stor := postgres.NewStorage()
+	oper := operator.NewOperator(&stor)
+	web.Init(&stor, &oper)
 }
