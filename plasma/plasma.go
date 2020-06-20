@@ -46,16 +46,21 @@ type Storage interface {
 	TransfersByUserId(id int) ([]Transfer, error)
 	// onchain withdraw
 	CreateOnchainWithdraw(withd *OnchainWithdrawal) error
-	OnchainWithdrawByUserId(id int) ([]OnchainWithdrawal, error)
+	OnchainWithdrawalsByUserId(id int) ([]OnchainWithdrawal, error)
 	// offchain withdraw
 	CreateOffchainWithdraw(withd *OffchainWithdrawal) error
-	OffchainWithdrawByUserId(id int) ([]OffchainWithdrawal, error)
+	OffchainWithdrawalsByUserId(id int) ([]OffchainWithdrawal, error)
+	// balances
+	ReduceBalance(user_id int, value int) error
+	IncreaseBalance(user_id int, value int) error
 }
 
 // TODO make handler
 type Operator interface {
-	ExecuteDeposits() error
-	ExecuteTransfers() error
-	ExecuteOnchainWithdrawals() error
-	ExecuteOffchainWithdrawals() error
+	CreateTransfer(trans Transfer) error
+	CreateOffchainWithdraw(from string, withd OffchainWithdrawal) error
+	// ExecuteDeposits() error
+	// ExecuteTransfers() error
+	// ExecuteOnchainWithdrawals() error
+	// ExecuteOffchainWithdrawals() error
 }
