@@ -18,8 +18,22 @@ func NewStorage() Storage {
 		balances: make(map[int]int),
 	}
 
-	stor.CreateUser("0x0")
-	stor.CreateUser("0x1")
+	stor.CreateUser(
+		&plasma.User{
+			ID:       0,
+			Username: "user0",
+			Password: "pass0",
+			Address:  "0x0",
+		},
+	)
+	stor.CreateUser(
+		&plasma.User{
+			ID:       1,
+			Username: "user1",
+			Password: "pass1",
+			Address:  "0x1",
+		},
+	)
 
 	stor.CreateDeposit(
 		&plasma.Deposit{
@@ -41,14 +55,31 @@ func NewStorage() Storage {
 	return stor
 }
 
-func (s *Storage) CreateUser(addr string) (*plasma.User, error) {
-	id := len(s.users)
-	user := plasma.User{
-		ID:      id,
-		Address: addr,
+func (s *Storage) IsUsernameAvailable(username string) bool {
+	for _, u := range s.users {
+		if u.Username == username {
+			return false
+		}
 	}
-	s.users = append(s.users, user)
-	return &user, nil
+	return true
+}
+
+func (s *Storage) IsUserValid(username, password string) bool {
+	for _, u := range s.users {
+		if u.Username == username && u.Password == password {
+			return true
+		}
+	}
+	return false
+}
+
+func (s *Storage) CreateUser(user *plasma.User) error {
+	s.users = append(s.users, *user)
+	return nil
+}
+
+func (s *Storage) GetUsersCount() int {
+	return len(s.users)
 }
 
 func (s *Storage) UserById(id int) (*plasma.User, error) {

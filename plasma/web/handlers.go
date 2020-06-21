@@ -1,6 +1,7 @@
 package web
 
 import (
+	"math/rand"
 	"net/http"
 	"strconv"
 
@@ -9,36 +10,17 @@ import (
 )
 
 func showIndexPage(c *gin.Context) {
-	// TODO add authentification
-	c.HTML(
-		http.StatusOK,
-		"index.html",
-		gin.H{
-			"title": "Home Page",
-		},
-	)
+	render(c, gin.H{"title": "Home Page"}, "index.html")
 }
 
 func showTransferPage(c *gin.Context) {
-	// TODO add authentification and show current balance
-	c.HTML(
-		http.StatusOK,
-		"transfer.html",
-		gin.H{
-			"title": "Transfer Page",
-		},
-	)
+	// TODO show current balance
+	render(c, gin.H{"title": "Transfer Page"}, "transfer.html")
 }
 
 func showWithdrawPage(c *gin.Context) {
-	// TODO add authentification and show current balance
-	c.HTML(
-		http.StatusOK,
-		"withdraw.html",
-		gin.H{
-			"title": "Withdraw Page",
-		},
-	)
+	// TODO show current balance
+	render(c, gin.H{"title": "Withdraw Page"}, "withdraw.html")
 }
 
 func createTransfer(c *gin.Context) {
@@ -73,6 +55,8 @@ func createTransfer(c *gin.Context) {
 	if err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 	}
+
+	render(c, gin.H{"title": "Transfer"}, "submission-successful.html")
 }
 
 func createWithdraw(c *gin.Context) {
@@ -105,6 +89,8 @@ func createWithdraw(c *gin.Context) {
 	if err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 	}
+
+	render(c, gin.H{"title": "Withdraw"}, "submission-successful.html")
 }
 
 func getUserHistory(c *gin.Context) {
@@ -130,9 +116,8 @@ func getUserHistory(c *gin.Context) {
 		c.AbortWithError(http.StatusNotFound, err)
 	}
 
-	c.HTML(
-		http.StatusOK,
-		"history.html",
+	render(
+		c,
 		gin.H{
 			"title":          "History Page",
 			"deposits":       deposits,
@@ -140,5 +125,95 @@ func getUserHistory(c *gin.Context) {
 			"onWithdrawals":  onWithdrawals,
 			"offWithdrawals": offWithdrawals,
 		},
+		"history.html",
 	)
+}
+
+func generateSessionToken() string {
+	// TODO use secure way
+	return strconv.FormatInt(rand.Int63(), 16)
+}
+
+func showRegistrationPage(c *gin.Context) {
+	c.HTML(
+		http.StatusOK,
+		"register.html",
+		gin.H{
+			"title": "Register",
+		},
+	)
+}
+
+func register(c *gin.Context) {
+	username := c.PostForm("username")
+	password := c.PostForm("password")
+	address := c.PostForm("address")
+
+	if _, err := operator.RegisterUser(username, password, address); err == nil {
+		// If the user is created, set the token in a cookie and log the user in
+		token := generateSessionToken()
+		c.SetCookie("token", token, 3600, "", "", false, true)
+		c.Set("is_logged_in", true)
+
+		render(c, gin.H{"title": "Successful registration & Login"},
+			"login-successful.html")
+
+	} else {
+		// If the username/password combination is invalid,
+		// show the error message on the login page
+		c.HTML(
+			http.StatusBadRequest,
+			"register.html",
+			gin.H{
+				"ErrorTitle":   "Registration Failed",
+				"ErrorMessage": err.Error(),
+			},
+		)
+
+	}
+}
+
+func showLoginPage(c *gin.Context) {
+	render(c, gin.H{
+		"title": "Login",
+	}, "login.html")
+}
+
+func performLogin(c *gin.Context) {
+	username := c.PostForm("username")
+	password := c.PostForm("password")
+
+	if storage.IsUserValid(username, password) {
+		token := generateSessionToken()
+		c.SetCookie("token", token, 3600, "", "", false, true)
+		c.Set("is_logged_in", true)
+
+		render(c, gin.H{
+			"title": "Successful Login"}, "login-successful.html")
+
+	} else {
+		c.HTML(http.StatusBadRequest, "login.html", gin.H{
+			"ErrorTitle":   "Login Failed",
+			"ErrorMessage": "Invalid credentials provided"})
+	}
+}
+
+func logout(c *gin.Context) {
+	c.SetCookie("token", "", -1, "", "", false, true)
+
+	c.Redirect(http.StatusTemporaryRedirect, "/")
+}
+
+func render(c *gin.Context, data gin.H, templateName string) {
+	loggedInInterface, _ := c.Get("is_logged_in")
+	data["is_logged_in"] = loggedInInterface.(bool)
+
+	switch c.Request.Header.Get("Accept") {
+	case "application/json":
+		c.JSON(http.StatusOK, data["payload"])
+	case "application/xml":
+		c.XML(http.StatusOK, data["payload"])
+	default:
+		c.HTML(http.StatusOK, templateName, data)
+	}
 }

@@ -1,8 +1,10 @@
 package plasma
 
 type User struct {
-	ID      int
-	Address string
+	ID       int
+	Username string
+	Password string
+	Address  string
 }
 
 type Deposit struct {
@@ -35,7 +37,10 @@ type OffchainWithdrawal struct {
 
 type Storage interface {
 	// user
-	CreateUser(addr string) (*User, error)
+	IsUsernameAvailable(username string) bool
+	IsUserValid(username, password string) bool
+	CreateUser(user *User) error
+	GetUsersCount() int
 	UserById(id int) (*User, error)
 	UserByAddress(addr string) (*User, error)
 	// deposit
@@ -57,6 +62,7 @@ type Storage interface {
 
 // TODO make handler
 type Operator interface {
+	RegisterUser(username, password, addr string) (*User, error)
 	CreateTransfer(trans Transfer) error
 	CreateOffchainWithdraw(from string, withd OffchainWithdrawal) error
 	// ExecuteDeposits() error
