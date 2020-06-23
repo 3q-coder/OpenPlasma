@@ -21,5 +21,7 @@ func Init(stor plasma.Storage, oper plasma.Operator) {
 
 	initializeRoutes()
 
+	initializeAdmin()
+
 	Router.Run()
 }
