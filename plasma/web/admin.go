@@ -2,14 +2,16 @@ package web
 
 import (
 	_ "github.com/GoAdminGroup/go-admin/adapter/gin"
-	"github.com/GoAdminGroup/go-admin/engine"
-	"github.com/GoAdminGroup/go-admin/examples/datamodel"
-	"github.com/GoAdminGroup/go-admin/modules/config"
 	_ "github.com/GoAdminGroup/go-admin/modules/db/drivers/sqlite"
+
+	"github.com/GoAdminGroup/go-admin/engine"
+	"github.com/GoAdminGroup/go-admin/modules/config"
 	"github.com/GoAdminGroup/go-admin/modules/language"
 	"github.com/GoAdminGroup/go-admin/template"
 	"github.com/GoAdminGroup/go-admin/template/chartjs"
 	"github.com/GoAdminGroup/themes/adminlte"
+
+	"github.com/DryginAlexander/OpenPlasma/plasma/web/tables"
 )
 
 func initializeAdmin() {
@@ -46,16 +48,11 @@ func initializeAdmin() {
 	template.AddComp(chartjs.NewChart())
 
 	_ = eng.AddConfig(cfg).
-		// AddGenerators(datamodel.Generators).
-		// // add generator, first parameter is the url prefix of table when visit.
-		// // example:
-		// //
-		// // "user" => http://localhost:9033/admin/info/user
-		// //
-		// AddGenerator("user", datamodel.GetUserTable).
+		AddGenerators(tables.Generators).
 		Use(Router)
 
-	// customize your pages
-	eng.HTML("GET", "/admin", datamodel.GetContent)
-
+	// dashboard page
+	eng.HTMLFile("GET", "/admin", "./plasma/web/templates/hello.tmpl", map[string]interface{}{
+		"msg": "Hello world",
+	})
 }

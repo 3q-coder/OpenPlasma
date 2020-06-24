@@ -13,7 +13,7 @@ type Storage struct {
 }
 
 func NewStorage() Storage {
-	db, _ := gorm.Open("sqlite3", "local.db")
+	db, _ := gorm.Open("sqlite3", "admin.db")
 	return Storage{
 		db: db,
 	}
