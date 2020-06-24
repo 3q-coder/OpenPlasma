@@ -1,10 +1,11 @@
 package plasma
 
 type User struct {
-	ID       int
+	Idn      int
 	Username string
 	Password string
 	Address  string
+	Balance  int
 }
 
 type Deposit struct {

@@ -15,5 +15,6 @@ require (
 	github.com/modern-go/reflect2 v1.0.1 // indirect
 	golang.org/x/sys v0.0.0-20200615200032-f1bc736245b1 // indirect
 	google.golang.org/protobuf v1.24.0 // indirect
+	gopkg.in/gormigrate.v1 v1.6.0
 	gopkg.in/yaml.v2 v2.3.0 // indirect
 )

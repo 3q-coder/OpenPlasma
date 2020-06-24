@@ -22,9 +22,9 @@ func (o *Operator) RegisterUser(username, password, addr string) (*plasma.User, 
 		return nil, errors.New("The username isn't available")
 	}
 
-	id := o.storage.GetUsersCount()
+	idn := o.storage.GetUsersCount()
 	user := plasma.User{
-		ID:       id,
+		Idn:      idn,
 		Username: username,
 		Password: password,
 		Address:  addr,
@@ -37,12 +37,12 @@ func (o *Operator) CreateTransfer(trans plasma.Transfer) error {
 	// TODO properly handle concurent requests
 
 	user, _ := o.storage.UserByAddress(trans.From)
-	trans.UserId = user.ID
+	trans.UserId = user.Idn
 
 	_ = o.storage.ReduceBalance(trans.UserId, trans.Value)
 
 	user, _ = o.storage.UserByAddress(trans.To)
-	_ = o.storage.IncreaseBalance(user.ID, trans.Value)
+	_ = o.storage.IncreaseBalance(user.Idn, trans.Value)
 
 	_ = o.storage.CreateTransfer(&trans)
 
@@ -53,7 +53,7 @@ func (o *Operator) CreateOffchainWithdraw(from string, withd plasma.OffchainWith
 	// TODO properly handle concurent requests
 
 	user, _ := o.storage.UserByAddress(from)
-	withd.UserId = user.ID
+	withd.UserId = user.Idn
 
 	_ = o.storage.ReduceBalance(withd.UserId, withd.Value)
 
