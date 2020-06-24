@@ -17,7 +17,7 @@ func Init(stor plasma.Storage, oper plasma.Operator) {
 	Router = gin.Default()
 
 	// TODO: fix path
-	Router.LoadHTMLGlob("../../plasma/web/templates/*")
+	Router.LoadHTMLGlob("./plasma/web/templates/*")
 
 	initializeRoutes()
 

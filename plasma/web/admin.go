@@ -3,6 +3,7 @@ package web
 import (
 	_ "github.com/GoAdminGroup/go-admin/adapter/gin"
 	"github.com/GoAdminGroup/go-admin/engine"
+	"github.com/GoAdminGroup/go-admin/examples/datamodel"
 	"github.com/GoAdminGroup/go-admin/modules/config"
 	_ "github.com/GoAdminGroup/go-admin/modules/db/drivers/sqlite"
 	"github.com/GoAdminGroup/go-admin/modules/language"
@@ -25,18 +26,6 @@ func initializeAdmin() {
 				Driver:     "sqlite",
 			},
 		},
-		// Databases: config.DatabaseList{
-		// 	"default": {
-		// 		Host:       "127.0.0.1",
-		// 		Port:       "5432",
-		// 		User:       "django",
-		// 		Pwd:        "jw8s0F4",
-		// 		Name:       "django",
-		// 		MaxIdleCon: 50,
-		// 		MaxOpenCon: 150,
-		// 		Driver:     config.DriverPostgresql,
-		// 	},
-		// },
 		UrlPrefix: "admin",
 		// STORE is important. And the directory should has permission to write.
 		Store: config.Store{
@@ -67,6 +56,6 @@ func initializeAdmin() {
 		Use(Router)
 
 	// customize your pages
-	// eng.HTML("GET", "/admin", datamodel.GetContent)
+	eng.HTML("GET", "/admin", datamodel.GetContent)
 
 }
