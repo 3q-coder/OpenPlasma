@@ -32,13 +32,12 @@ func GetUserTable(ctx *context.Context) (userTable table.Table) {
 	info.AddField("Idn", "idn", db.Int).FieldSortable()
 	info.AddField("Username", "username", db.Varchar).FieldEditAble(editType.Text).
 		FieldFilterable(types.FilterType{Operator: types.FilterOperatorLike})
-	info.AddField("Password", "password", db.Varchar).FieldFilterable()
+	info.AddField("Password", "password", db.Varchar)
 	info.AddField("Address", "address", db.Varchar).FieldFilterable()
 	info.AddField("Balance", "balance", db.Int).FieldSortable()
-	// TODO
-	// info.AddField("CreatedAt", "created_at", db.Timestamp).
-	// 	FieldFilterable(types.FilterType{FormType: form.DatetimeRange})
-	// info.AddField("UpdatedAt", "updated_at", db.Timestamp).FieldEditAble(editType.Datetime)
+	info.AddField("CreatedAt", "created_at", db.Timestamp).
+		FieldFilterable(types.FilterType{FormType: form.DatetimeRange})
+	info.AddField("UpdatedAt", "updated_at", db.Timestamp).FieldEditAble(editType.Datetime)
 
 	info.SetTable("users").SetTitle("Users").SetDescription("Users")
 
@@ -49,9 +48,8 @@ func GetUserTable(ctx *context.Context) (userTable table.Table) {
 	formList.AddField("Password", "password", db.Varchar, form.Text)
 	formList.AddField("Address", "address", db.Varchar, form.Text)
 	formList.AddField("Balance", "balance", db.Int, form.Number)
-
-	// formList.AddField("UpdatedAt", "updated_at", db.Timestamp, form.Default).FieldNotAllowAdd()
-	// formList.AddField("CreatedAt", "created_at", db.Timestamp, form.Default).FieldNotAllowAdd()
+	formList.AddField("UpdatedAt", "updated_at", db.Timestamp, form.Datetime)
+	formList.AddField("CreatedAt", "created_at", db.Timestamp, form.Datetime)
 
 	formList.SetTable("users").SetTitle("Users").SetDescription("Users")
 

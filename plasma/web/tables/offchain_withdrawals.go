@@ -7,7 +7,9 @@ import (
 	"github.com/GoAdminGroup/go-admin/modules/db"
 	form2 "github.com/GoAdminGroup/go-admin/plugins/admin/modules/form"
 	"github.com/GoAdminGroup/go-admin/plugins/admin/modules/table"
+	"github.com/GoAdminGroup/go-admin/template/types"
 	"github.com/GoAdminGroup/go-admin/template/types/form"
+	editType "github.com/GoAdminGroup/go-admin/template/types/table"
 )
 
 func GetOffchainWithdrawalTable(ctx *context.Context) (userTable table.Table) {
@@ -30,6 +32,9 @@ func GetOffchainWithdrawalTable(ctx *context.Context) (userTable table.Table) {
 	info.AddField("UserId", "user_id", db.Int).FieldSortable()
 	info.AddField("Value", "value", db.Int).FieldSortable()
 	info.AddField("Address", "address", db.Varchar).FieldFilterable()
+	info.AddField("CreatedAt", "created_at", db.Timestamp).
+		FieldFilterable(types.FilterType{FormType: form.DatetimeRange})
+	info.AddField("UpdatedAt", "updated_at", db.Timestamp).FieldEditAble(editType.Datetime)
 
 	info.SetTable("offchain_withdrawals").SetTitle("OffchainWithdrawals").SetDescription("OffchainWithdrawals")
 
@@ -38,6 +43,8 @@ func GetOffchainWithdrawalTable(ctx *context.Context) (userTable table.Table) {
 	formList.AddField("UserId", "user_id", db.Int, form.Number)
 	formList.AddField("Value", "value", db.Int, form.Number)
 	formList.AddField("Address", "address", db.Varchar, form.Text)
+	formList.AddField("UpdatedAt", "updated_at", db.Timestamp, form.Default).FieldNotAllowAdd()
+	formList.AddField("CreatedAt", "created_at", db.Timestamp, form.Default).FieldNotAllowAdd()
 
 	formList.SetTable("offchain_withdrawals").SetTitle("OffchainWithdrawals").SetDescription("OffchainWithdrawals")
 

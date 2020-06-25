@@ -7,7 +7,9 @@ import (
 	"github.com/GoAdminGroup/go-admin/modules/db"
 	form2 "github.com/GoAdminGroup/go-admin/plugins/admin/modules/form"
 	"github.com/GoAdminGroup/go-admin/plugins/admin/modules/table"
+	"github.com/GoAdminGroup/go-admin/template/types"
 	"github.com/GoAdminGroup/go-admin/template/types/form"
+	editType "github.com/GoAdminGroup/go-admin/template/types/table"
 )
 
 func GetTransferTable(ctx *context.Context) (userTable table.Table) {
@@ -34,6 +36,9 @@ func GetTransferTable(ctx *context.Context) (userTable table.Table) {
 	info.AddField("Value", "value", db.Int).FieldSortable()
 	info.AddField("Nonce", "nonce", db.Int).FieldSortable()
 	info.AddField("Signature", "signature", db.Varchar).FieldFilterable()
+	info.AddField("CreatedAt", "created_at", db.Timestamp).
+		FieldFilterable(types.FilterType{FormType: form.DatetimeRange})
+	info.AddField("UpdatedAt", "updated_at", db.Timestamp).FieldEditAble(editType.Datetime)
 
 	info.SetTable("transfers").SetTitle("Transfers").SetDescription("Transfers")
 
@@ -45,6 +50,8 @@ func GetTransferTable(ctx *context.Context) (userTable table.Table) {
 	formList.AddField("Value", "value", db.Int, form.Number)
 	formList.AddField("Nonce", "nonce", db.Int, form.Number)
 	formList.AddField("Signature", "signature", db.Varchar, form.Text)
+	formList.AddField("UpdatedAt", "updated_at", db.Timestamp, form.Default).FieldNotAllowAdd()
+	formList.AddField("CreatedAt", "created_at", db.Timestamp, form.Default).FieldNotAllowAdd()
 
 	formList.SetTable("transfers").SetTitle("Transfers").SetDescription("Transfers")
 
