@@ -22,7 +22,7 @@ func (s *Storage) CreateOnchainWithdraw(_withd *plasma.OnchainWithdrawal) error 
 func (s *Storage) OnchainWithdrawalsByUserId(id int) ([]plasma.OnchainWithdrawal, error) {
 	withds := []*OnchainWithdrawal{}
 	err := s.db.Set("gorm:auto_preload", true).
-		Where("account_ID = ?", id).Find(&withds).Error
+		Where("user_ID = ?", id).Find(&withds).Error
 	var plasma_withds []plasma.OnchainWithdrawal
 	for _, withd := range withds {
 		plasma_withds = append(plasma_withds, withd.OnchainWithdrawal)

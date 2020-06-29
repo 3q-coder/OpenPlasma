@@ -22,7 +22,7 @@ func (s *Storage) CreateTransfer(_trans *plasma.Transfer) error {
 func (s *Storage) TransfersByUserId(id int) ([]plasma.Transfer, error) {
 	transfers := []*Transfer{}
 	err := s.db.Set("gorm:auto_preload", true).
-		Where("account_ID = ?", id).Find(&transfers).Error
+		Where("user_ID = ?", id).Find(&transfers).Error
 	var plasma_transfers []plasma.Transfer
 	for _, trans := range transfers {
 		plasma_transfers = append(plasma_transfers, trans.Transfer)

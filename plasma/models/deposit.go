@@ -22,7 +22,7 @@ func (s *Storage) CreateDeposit(_dep *plasma.Deposit) error {
 func (s *Storage) DepositsByUserId(id int) ([]plasma.Deposit, error) {
 	deps := []*Deposit{}
 	err := s.db.Set("gorm:auto_preload", true).
-		Where("account_ID = ?", id).Find(&deps).Error
+		Where("user_ID = ?", id).Find(&deps).Error
 	var plasma_deps []plasma.Deposit
 	for _, dep := range deps {
 		plasma_deps = append(plasma_deps, dep.Deposit)
