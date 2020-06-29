@@ -5,6 +5,7 @@ import (
 
 	"github.com/DryginAlexander/OpenPlasma/plasma/models"
 	"github.com/DryginAlexander/OpenPlasma/plasma/operator"
+	"github.com/DryginAlexander/OpenPlasma/plasma/scheduler"
 	"github.com/DryginAlexander/OpenPlasma/plasma/web"
 )
 
@@ -21,6 +22,15 @@ func main() {
 
 	// fmt.Println("init settings")
 
+	// go blockchain.RunListener()
+	// go blockchain.RunSender()
+
 	oper := operator.NewOperator(&stor)
+
+	go scheduler.RunDeposits(&stor, &oper)
+	go scheduler.RunTransfers(&stor, &oper)
+	go scheduler.RunOnchainWithdrawals(&stor, &oper)
+	go scheduler.RunOffchainWithdrawals(&stor, &oper)
+
 	web.Init(&stor, &stor, &oper)
 }

@@ -60,15 +60,16 @@ type Storage interface {
 	OffchainWithdrawalsByUserId(id int) ([]OffchainWithdrawal, error)
 }
 
-// TODO make handler
 type Operator interface {
+	// web
 	RegisterUser(username, password, addr string) (*User, error)
 	CreateTransfer(trans Transfer) error
 	CreateOffchainWithdraw(from string, withd OffchainWithdrawal) error
-	// ExecuteDeposits() error
-	// ExecuteTransfers() error
-	// ExecuteOnchainWithdrawals() error
-	// ExecuteOffchainWithdrawals() error
+	// plasma blocks
+	ExecuteDeposits() error
+	ExecuteTransfers() error
+	ExecuteOnchainWithdrawals() error
+	ExecuteOffchainWithdrawals() error
 }
 
 type HotConfig interface {
