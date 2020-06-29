@@ -7,4 +7,5 @@ var Generators = map[string]table.Generator{
 	"deposits":             GetDepositTable,
 	"transfers":            GetTransferTable,
 	"offchain_withdrawals": GetOffchainWithdrawalTable,
+	"hot_configs":          GetHotConfigTable,
 }
