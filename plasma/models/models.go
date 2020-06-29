@@ -49,10 +49,19 @@ func (s *Storage) MigrateDB() error {
 					gorm.Model
 					plasma.OffchainWithdrawal
 				}
-				return tx.AutoMigrate(&User{}, &Deposit{}, &Transfer{}, &OnchainWithdrawal{}, &OffchainWithdrawal{}).Error
+				type HotConfig struct {
+					gorm.Model
+					DepositPeriod            int
+					TransferPeriod           int
+					OnchainWithdrawalPeriod  int
+					OffchainWithdrawalPeriod int
+				}
+				return tx.AutoMigrate(&User{}, &Deposit{}, &Transfer{},
+					&OnchainWithdrawal{}, &OffchainWithdrawal{}, &HotConfig{}).Error
 			},
 			Rollback: func(tx *gorm.DB) error {
-				return tx.DropTableIfExists("users", "deposits", "transfers", "onchain_withdrawals", "offchain_withdrawals").Error
+				return tx.DropTableIfExists("users", "deposits", "transfers",
+					"onchain_withdrawals", "offchain_withdrawals", "hot_configs").Error
 			},
 		},
 		// future migrations ...

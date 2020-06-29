@@ -44,6 +44,8 @@ type Storage interface {
 	GetUsersCount() int
 	UserById(id int) (*User, error)
 	UserByAddress(addr string) (*User, error)
+	ReduceBalance(user_id int, value int) error
+	IncreaseBalance(user_id int, value int) error
 	// deposit
 	CreateDeposit(dep *Deposit) error
 	DepositsByUserId(id int) ([]Deposit, error)
@@ -56,9 +58,6 @@ type Storage interface {
 	// offchain withdraw
 	CreateOffchainWithdraw(withd *OffchainWithdrawal) error
 	OffchainWithdrawalsByUserId(id int) ([]OffchainWithdrawal, error)
-	// balances
-	ReduceBalance(user_id int, value int) error
-	IncreaseBalance(user_id int, value int) error
 }
 
 // TODO make handler
@@ -70,4 +69,11 @@ type Operator interface {
 	// ExecuteTransfers() error
 	// ExecuteOnchainWithdrawals() error
 	// ExecuteOffchainWithdrawals() error
+}
+
+type HotConfig interface {
+	DepositPeriod() (int, error)
+	TransferPeriod() (int, error)
+	OnchainWithdrawalPeriod() (int, error)
+	OffchainWithdrawalPeriod() (int, error)
 }
