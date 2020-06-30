@@ -1,1 +1,3 @@
-cmd/plasma/plasma
+logs/
+local.db
+admin.db
