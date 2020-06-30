@@ -2,6 +2,7 @@ package models
 
 import (
 	"github.com/DryginAlexander/OpenPlasma/plasma"
+	"github.com/DryginAlexander/OpenPlasma/plasma/settings"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
@@ -13,7 +14,7 @@ type Storage struct {
 }
 
 func NewStorage() Storage {
-	db, _ := gorm.Open("sqlite3", "admin.db")
+	db, _ := gorm.Open(settings.DBDialect, settings.DBName)
 	return Storage{
 		db: db,
 	}

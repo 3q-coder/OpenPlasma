@@ -6,10 +6,15 @@ import (
 	"github.com/DryginAlexander/OpenPlasma/plasma/models"
 	"github.com/DryginAlexander/OpenPlasma/plasma/operator"
 	"github.com/DryginAlexander/OpenPlasma/plasma/scheduler"
+	"github.com/DryginAlexander/OpenPlasma/plasma/settings"
 	"github.com/DryginAlexander/OpenPlasma/plasma/web"
 )
 
 func main() {
+
+	fmt.Println("init settings")
+	_ = settings.Init("./env/dev.env")
+
 	fmt.Println("connecting to db")
 	stor := models.NewStorage()
 	defer stor.CloseDB()
