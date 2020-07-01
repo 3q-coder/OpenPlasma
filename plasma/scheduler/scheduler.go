@@ -1,64 +1,69 @@
 package scheduler
 
 import (
+	"context"
 	"fmt"
 	"time"
 
 	"github.com/DryginAlexander/OpenPlasma/plasma"
 )
 
-func RunDeposits(hotConfig plasma.HotConfig, oper plasma.Operator) {
+func RunDeposits(ctx context.Context, hotConfig plasma.HotConfig, oper plasma.Operator) {
 	for {
-		// TODO stop though chanel
+		waitTime, _ := hotConfig.DepositPeriod()
 
-		per, _ := hotConfig.DepositPeriod()
-		time.Sleep(time.Duration(per) * time.Second)
-
-		oper.ExecuteDeposits()
-
-		fmt.Println("RunDeposits every ", per)
+		select {
+		case <-ctx.Done():
+			fmt.Println("[depositWorker] - SHUTDOWN")
+			return
+		case <-time.After(waitTime):
+			oper.ExecuteDeposits()
+			fmt.Println("RunDeposits every ", waitTime)
+		}
 	}
-	// logger.Printf("[listener] - SHUTDOWN\n")
 }
 
-func RunTransfers(hotConfig plasma.HotConfig, oper plasma.Operator) {
+func RunTransfers(ctx context.Context, hotConfig plasma.HotConfig, oper plasma.Operator) {
 	for {
-		// TODO stop though chanel
+		waitTime, _ := hotConfig.TransferPeriod()
 
-		per, _ := hotConfig.TransferPeriod()
-		time.Sleep(time.Duration(per) * time.Second)
-
-		oper.ExecuteTransfers()
-
-		fmt.Println("RunTransfers every ", per)
+		select {
+		case <-ctx.Done():
+			fmt.Println("[transferWorker] - SHUTDOWN")
+			return
+		case <-time.After(waitTime):
+			oper.ExecuteTransfers()
+			fmt.Println("RunTransfers every ", waitTime)
+		}
 	}
-	// logger.Printf("[listener] - SHUTDOWN\n")
 }
 
-func RunOffchainWithdrawals(hotConfig plasma.HotConfig, oper plasma.Operator) {
+func RunOffchainWithdrawals(ctx context.Context, hotConfig plasma.HotConfig, oper plasma.Operator) {
 	for {
-		// TODO stop though chanel
+		waitTime, _ := hotConfig.OffchainWithdrawalPeriod()
 
-		per, _ := hotConfig.OffchainWithdrawalPeriod()
-		time.Sleep(time.Duration(per) * time.Second)
-
-		oper.ExecuteOffchainWithdrawals()
-
-		fmt.Println("RunOffchainWithdrawals every ", per)
+		select {
+		case <-ctx.Done():
+			fmt.Println("[offchainWithdrawalWorker] - SHUTDOWN")
+			return
+		case <-time.After(waitTime):
+			oper.ExecuteOffchainWithdrawals()
+			fmt.Println("RunOffchainWithdrawals every ", waitTime)
+		}
 	}
-	// logger.Printf("[listener] - SHUTDOWN\n")
 }
 
-func RunOnchainWithdrawals(hotConfig plasma.HotConfig, oper plasma.Operator) {
+func RunOnchainWithdrawals(ctx context.Context, hotConfig plasma.HotConfig, oper plasma.Operator) {
 	for {
-		// TODO stop though chanel
+		waitTime, _ := hotConfig.OnchainWithdrawalPeriod()
 
-		per, _ := hotConfig.OnchainWithdrawalPeriod()
-		time.Sleep(time.Duration(per) * time.Second)
-
-		oper.ExecuteOnchainWithdrawals()
-
-		fmt.Println("RunOnchainWithdrawals every ", per)
+		select {
+		case <-ctx.Done():
+			fmt.Println("[onchainWithdrawalWorker] - SHUTDOWN")
+			return
+		case <-time.After(waitTime):
+			oper.ExecuteOnchainWithdrawals()
+			fmt.Println("RunOnchainWithdrawals every ", waitTime)
+		}
 	}
-	// logger.Printf("[listener] - SHUTDOWN\n")
 }

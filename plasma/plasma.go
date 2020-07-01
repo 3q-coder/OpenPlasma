@@ -1,5 +1,7 @@
 package plasma
 
+import "time"
+
 type User struct {
 	Idn      int
 	Username string
@@ -73,8 +75,8 @@ type Operator interface {
 }
 
 type HotConfig interface {
-	DepositPeriod() (int, error)
-	TransferPeriod() (int, error)
-	OnchainWithdrawalPeriod() (int, error)
-	OffchainWithdrawalPeriod() (int, error)
+	DepositPeriod() (time.Duration, error)
+	TransferPeriod() (time.Duration, error)
+	OnchainWithdrawalPeriod() (time.Duration, error)
+	OffchainWithdrawalPeriod() (time.Duration, error)
 }
