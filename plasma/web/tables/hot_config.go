@@ -3,6 +3,7 @@ package tables
 import (
 	"fmt"
 
+	"github.com/DryginAlexander/OpenPlasma/plasma/settings"
 	"github.com/GoAdminGroup/go-admin/context"
 	"github.com/GoAdminGroup/go-admin/modules/db"
 	form2 "github.com/GoAdminGroup/go-admin/plugins/admin/modules/form"
@@ -13,7 +14,7 @@ import (
 func GetHotConfigTable(ctx *context.Context) (userTable table.Table) {
 
 	userTable = table.NewDefaultTable(table.Config{
-		Driver:     db.DriverSqlite,
+		Driver:     settings.DBDialect,
 		CanAdd:     true,
 		Editable:   true,
 		Deletable:  true,

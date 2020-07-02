@@ -2,7 +2,7 @@ package web
 
 import (
 	_ "github.com/GoAdminGroup/go-admin/adapter/gin"
-	_ "github.com/GoAdminGroup/go-admin/modules/db/drivers/sqlite"
+	_ "github.com/GoAdminGroup/go-admin/modules/db/drivers/postgres"
 
 	"github.com/GoAdminGroup/go-admin/engine"
 	"github.com/GoAdminGroup/go-admin/modules/config"
@@ -11,6 +11,7 @@ import (
 	"github.com/GoAdminGroup/go-admin/template/chartjs"
 	"github.com/GoAdminGroup/themes/adminlte"
 
+	"github.com/DryginAlexander/OpenPlasma/plasma/settings"
 	"github.com/DryginAlexander/OpenPlasma/plasma/web/tables"
 )
 
@@ -22,10 +23,15 @@ func initializeAdmin() {
 	cfg := config.Config{
 		Databases: config.DatabaseList{
 			"default": {
+				Host:       settings.DBHost,
+				Port:       settings.DBPort,
+				User:       settings.DBUser,
+				Pwd:        settings.DBPw,
+				Name:       settings.DBName,
 				MaxIdleCon: 50,
 				MaxOpenCon: 150,
-				File:       "./admin.db",
-				Driver:     "sqlite",
+				File:       settings.DBName, // for sqlite
+				Driver:     settings.DBDialect,
 			},
 		},
 		UrlPrefix: "admin",

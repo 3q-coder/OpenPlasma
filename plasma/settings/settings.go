@@ -43,9 +43,9 @@ func Init(dotenvFileName string) error {
 	Debug = os.Getenv("DEBUG") == "True"
 
 	// data base settings
-	DBDialect = getenv("DB_DIALECT", "sqlite3")
+	DBDialect = getenv("DB_DIALECT", "sqlite")
 	DBHost = os.Getenv("DB_HOST")
-	DBName = getenv("DB_NAME", "admin.db")
+	DBName = getenv("DB_NAME", "local.db")
 	DBPort = os.Getenv("DB_PORT")
 	DBUser = os.Getenv("DB_USER")
 	DBPw = os.Getenv("DB_PW")
