@@ -1,6 +1,8 @@
 package models
 
 import (
+	"fmt"
+
 	"github.com/DryginAlexander/OpenPlasma/plasma"
 	"github.com/DryginAlexander/OpenPlasma/plasma/settings"
 	"github.com/jinzhu/gorm"
@@ -14,7 +16,28 @@ type Storage struct {
 }
 
 func NewStorage() Storage {
-	db, _ := gorm.Open(settings.DBDialect, settings.DBName)
+	var DBConnStr string
+	var dialect string
+	switch settings.DBDialect {
+	case "sqlite":
+		DBConnStr = settings.DBName
+		dialect = "sqlite3"
+	case "postgresql":
+		DBConnStr = fmt.Sprintf(
+			"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
+			settings.DBHost,
+			settings.DBPort,
+			settings.DBUser,
+			settings.DBPw,
+			settings.DBName,
+		)
+		dialect = "postgres"
+		// default:
+		// 	return errors.New(fmt.Sprintf("unknown DBDialect %s", settings.DBDialect))
+	}
+
+	db, _ := gorm.Open(dialect, DBConnStr)
+	// DB.SetLogger(logger)
 	return Storage{
 		db: db,
 	}

@@ -3,6 +3,7 @@ package models
 import (
 	"os"
 	"strconv"
+	"time"
 
 	"github.com/jinzhu/gorm"
 	"github.com/joho/godotenv"
@@ -51,30 +52,30 @@ func (s *Storage) InitHotConfig(dotenvFileName string) error {
 // Getters ----------------------------------------------------------
 // ------------------------------------------------------------------
 
-func (s *Storage) DepositPeriod() (int, error) {
+func (s *Storage) DepositPeriod() (time.Duration, error) {
 	conf := HotConfig{}
 	err := s.db.Set("gorm:auto_preload", true).
 		Where("id = ?", 1).Find(&conf).Error
-	return conf.DepositPeriod, err
+	return time.Duration(conf.DepositPeriod) * time.Second, err
 }
 
-func (s *Storage) TransferPeriod() (int, error) {
+func (s *Storage) TransferPeriod() (time.Duration, error) {
 	conf := HotConfig{}
 	err := s.db.Set("gorm:auto_preload", true).
 		Where("id = ?", 1).Find(&conf).Error
-	return conf.TransferPeriod, err
+	return time.Duration(conf.TransferPeriod) * time.Second, err
 }
 
-func (s *Storage) OnchainWithdrawalPeriod() (int, error) {
+func (s *Storage) OnchainWithdrawalPeriod() (time.Duration, error) {
 	conf := HotConfig{}
 	err := s.db.Set("gorm:auto_preload", true).
 		Where("id = ?", 1).Find(&conf).Error
-	return conf.OnchainWithdrawalPeriod, err
+	return time.Duration(conf.OnchainWithdrawalPeriod) * time.Second, err
 }
 
-func (s *Storage) OffchainWithdrawalPeriod() (int, error) {
+func (s *Storage) OffchainWithdrawalPeriod() (time.Duration, error) {
 	conf := HotConfig{}
 	err := s.db.Set("gorm:auto_preload", true).
 		Where("id = ?", 1).Find(&conf).Error
-	return conf.OffchainWithdrawalPeriod, err
+	return time.Duration(conf.OffchainWithdrawalPeriod) * time.Second, err
 }

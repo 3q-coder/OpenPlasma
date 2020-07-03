@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/DryginAlexander/OpenPlasma/plasma/models"
@@ -25,6 +26,9 @@ func main() {
 	fmt.Println("init hot config if needed")
 	_ = stor.InitHotConfig("./env/dev.env")
 
+	ctx, finish := context.WithCancel(context.Background())
+	defer finish()
+
 	// fmt.Println("init settings")
 
 	// go blockchain.RunListener()
@@ -32,10 +36,10 @@ func main() {
 
 	oper := operator.NewOperator(&stor)
 
-	go scheduler.RunDeposits(&stor, &oper)
-	go scheduler.RunTransfers(&stor, &oper)
-	go scheduler.RunOnchainWithdrawals(&stor, &oper)
-	go scheduler.RunOffchainWithdrawals(&stor, &oper)
+	go scheduler.RunDeposits(ctx, &stor, &oper)
+	go scheduler.RunTransfers(ctx, &stor, &oper)
+	go scheduler.RunOnchainWithdrawals(ctx, &stor, &oper)
+	go scheduler.RunOffchainWithdrawals(ctx, &stor, &oper)
 
 	web.Init(&stor, &stor, &oper)
 }
