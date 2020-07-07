@@ -32,10 +32,6 @@ use pairing_ce::{
 
 use rand::thread_rng;
 
-use crate::{
-    utils::tree::TreeState,
-};
-
 
 #[derive(Clone)]
 pub struct Transfer {

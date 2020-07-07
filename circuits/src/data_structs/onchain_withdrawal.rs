@@ -8,7 +8,6 @@ use super::super::{
 
 use crate::utils::utils::{
     optionalize,
-    fr_to_usize,
     usize_to_fr,
 };
 
