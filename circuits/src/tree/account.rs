@@ -16,7 +16,6 @@ use pairing_ce::{
 };
 
 use super::{
-    balance::Balance,
     merkle_tree::PoseidonMerkleTree,
 };
 
