@@ -134,7 +134,6 @@ impl<E> OnchainWithdrawalCircuit<E>
 pub struct OnchainWithdrawalBatchCircuit<'a, E: JubjubEngine + PoseidonEngine> {
     pub batch_size: usize,
     pub account_depth: usize,
-    pub balance_depth: usize,
     pub hash_params: &'a <E as PoseidonEngine>::Params,
 
     pub queue: Vec::<OnchainWithdrawalCircuit<E>>,
