@@ -220,18 +220,17 @@ fn setup_transfer_circuit<'a>(
 // --------------------------------------------------------------------------------------
 
 #[test]
-pub fn execute_trade() {
+pub fn happy_path() {
     let hash_params = Bn256PoseidonParams::new_for_params::<BlakeHasher>(5,6,52,126);
     let sign_params = AltJubjubBn256::new();
 
-    let dep_params = setup_deposit_circuit(4, 2, &hash_params).unwrap();
+    let dep_params = setup_deposit_circuit(2, 2, &hash_params).unwrap();
+    let transfer_params = setup_transfer_circuit(1, 2, &hash_params, &sign_params).unwrap();
+    let of_w_params = setup_offchain_withdraw_circuit(1, 2, &hash_params, &sign_params).unwrap();
     let on_w_params = setup_onchain_withdraw_circuit(2, 2, &hash_params).unwrap();
-    let of_w_params = setup_offchain_withdraw_circuit(2, 2, &hash_params, &sign_params).unwrap();
-    let transfer_params = setup_transfer_circuit(2, 2, &hash_params, &sign_params).unwrap();
 
-    let mut oper = Operator::new(2, 2, 2, 4, 2,
-        &hash_params, &sign_params, &dep_params, &on_w_params, 
-        &of_w_params, &transfer_params);
+    let mut oper = Operator::new(2, 2, 1, 1, 2, &hash_params, &sign_params, 
+        &dep_params, &transfer_params, &of_w_params, &on_w_params);
     
     let mut rng = thread_rng();
 
@@ -256,14 +255,14 @@ pub fn execute_trade() {
         account_id: 0,
         amount: 100,
     };
-    oper.add_deposit(deposit_maker).unwrap();
+    oper.add_deposit(deposit_maker.clone()).unwrap();
 
     let deposit_taker = Deposit {
         pubkey: Some(pubkey_taker.clone()),
         account_id: 1,
         amount: 100,
     };
-    oper.add_deposit(deposit_taker).unwrap();
+    oper.add_deposit(deposit_taker.clone()).unwrap();
 
     let (public_inputs, proof) = oper.execute_deposit_batch().unwrap();
 
@@ -318,16 +317,11 @@ pub fn execute_trade() {
     };
 
     withdrawal.sign(&seckey_maker, &hash_params, &sign_params);
-    oper.add_offchain_withdrawal(withdrawal.clone()).unwrap();
-
-    withdrawal.nonce = 3;
-
-    withdrawal.sign(&seckey_maker, &hash_params, &sign_params);
-    oper.add_offchain_withdrawal(withdrawal.clone()).unwrap();
+    oper.add_offchain_withdrawal(withdrawal).unwrap();
 
     let (public_inputs, proof) = oper.execute_offchain_withdrawal_batch().unwrap();
 
-    // check deposit proof
+    // check proof
 
     let verifying_key = prepare_verifying_key(&of_w_params.vk);
 
@@ -336,7 +330,7 @@ pub fn execute_trade() {
 
     // check withdrawal execution
 
-    assert_eq!(fr_to_usize(oper.tree.get_balance(0)), 79);
+    assert_eq!(fr_to_usize(oper.tree.get_balance(0)), 89);
 
     // check onchain withdrawal ---------------------------------------------------------
 
@@ -352,7 +346,7 @@ pub fn execute_trade() {
 
     let (public_inputs, proof) = oper.execute_onchain_withdrawal_batch().unwrap();
 
-    // check deposit proof
+    // check proof
 
     let verifying_key = prepare_verifying_key(&on_w_params.vk);
 

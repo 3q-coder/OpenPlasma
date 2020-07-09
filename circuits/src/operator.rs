@@ -124,17 +124,17 @@ pub struct Operator<'a> {
 #[allow(dead_code)]
 impl<'a> Operator<'a> {
     pub fn new(
-        transfer_batch: usize,
-        onchain_withdrawal_batch: usize,
-        offchain_withdrawal_batch: usize,
-        deposit_batch: usize,
         account_depth: usize,
+        deposit_batch: usize,
+        transfer_batch: usize,
+        offchain_withdrawal_batch: usize,
+        onchain_withdrawal_batch: usize,
         hash_params: &'a Bn256PoseidonParams,
         sign_params: &'a AltJubjubBn256,
         deposit_circuit_params: &'a Parameters::<Bn256>,
-        onchain_withdrawal_circuit_params: &'a Parameters::<Bn256>,
-        offchain_withdrawal_circuit_params: &'a Parameters::<Bn256>,
         transfer_circuit_params: &'a Parameters::<Bn256>,
+        offchain_withdrawal_circuit_params: &'a Parameters::<Bn256>,
+        onchain_withdrawal_circuit_params: &'a Parameters::<Bn256>,
     ) -> Self {
         Operator {
             transfer_batch,
@@ -514,7 +514,7 @@ impl<'a> Operator<'a> {
 
             let pubkey = self.tree.get_pubkey(transfer.account_id_from);
 
-            let executed_withdrawal = TransferCircuit {
+            let executed_transfer = TransferCircuit {
                 account_state_from,
                 account_state_to,
                 account_id_from: Some(usize_to_fr(transfer.account_id_from)),
@@ -525,7 +525,7 @@ impl<'a> Operator<'a> {
                 pubkey: Some(pubkey.0),
             };
 
-            executed.push(executed_withdrawal);
+            executed.push(executed_transfer);
         }
 
         let new_root = self.tree.get_root();

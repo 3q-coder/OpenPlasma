@@ -132,6 +132,11 @@ impl Transfer {
             new_balance,
         );
 
+        tree.update_nonce(
+            self.account_id_from,
+            new_nonce,
+        );
+
         // record account state
         let account_state_from = AccountState::<Bn256> {
             old_balance: Some(old_balance),

@@ -106,16 +106,16 @@ impl<E> DepositCircuit<E>
 
         cs.enforce(
             || "check amount deposit",
-            |lc| lc + account_circuit.accounts_tree.old_leaf_alloc[0].get_variable()
+            |lc| lc + account_circuit.accounts_tree.old_leaf_alloc[3].get_variable()
                     + amount_alloc.get_variable(),
             |lc| lc + CS::one(),
-            |lc| lc + account_circuit.accounts_tree.new_leaf_alloc[0].get_variable(),
+            |lc| lc + account_circuit.accounts_tree.new_leaf_alloc[3].get_variable(),
         );
 
-        // check nonce the same TODO ???
+        // check nonce the same
 
         cs.enforce(
-            || "check nonce increase",
+            || "check nonce the same",
             |lc| lc + account_circuit.accounts_tree.old_leaf_alloc[2].get_variable(),
             |lc| lc + CS::one(),
             |lc| lc + account_circuit.accounts_tree.new_leaf_alloc[2].get_variable(),

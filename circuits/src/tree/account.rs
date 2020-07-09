@@ -91,6 +91,21 @@ impl<'a> AccountsTree<'a> {
             self.accounts[account_id].compress_to_leaf(),
         );
     }
+
+    pub fn update_nonce(
+        &mut self,
+        account_id: usize,
+        nonce: bn256::Fr,
+    ) {
+        assert!(account_id < self.accounts.len());
+
+        self.accounts[account_id].nonce = nonce;
+
+        self.accounts_tree.update_leaf(
+            account_id,
+            self.accounts[account_id].compress_to_leaf(),
+        );
+    }
     
     pub fn get_pubkey(&self, account_id: usize) -> PublicKey::<Bn256> {
         assert!(account_id < self.accounts.len());        
