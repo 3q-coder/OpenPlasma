@@ -79,15 +79,15 @@ impl<E> OnchainWithdrawalCircuit<E>
 
         cs.enforce(
             || "check amount withdrawal",
-            |lc| lc + account_circuit.accounts_tree.old_leaf_alloc[0].get_variable(),
+            |lc| lc + account_circuit.accounts_tree.old_leaf_alloc[3].get_variable(),
             |lc| lc + CS::one(),
-            |lc| lc + account_circuit.accounts_tree.new_leaf_alloc[0].get_variable()
+            |lc| lc + account_circuit.accounts_tree.new_leaf_alloc[3].get_variable()
                 + amount_alloc.get_variable(),
         );
 
         // check balance for overflow
 
-        account_circuit.accounts_tree.new_leaf_alloc[0].limit_number_of_bits(
+        account_circuit.accounts_tree.new_leaf_alloc[3].limit_number_of_bits(
             cs.namespace(|| "check buy balance overflow"),
             mem::size_of::<usize>() * BITS_IN_BYTE,
         )?;
