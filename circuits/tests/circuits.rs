@@ -202,7 +202,7 @@ fn setup_transfer_circuit<'a>(
     let mut queue = Vec::with_capacity(batch_size);
     queue.resize_with(batch_size, transfer_gen);
 
-    let circuit = TransferBatchCircuit::<'a, Bn256> {
+    let circuit = TransferBatchCircuit {
         batch_size,
         account_depth,
         hash_params,

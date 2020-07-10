@@ -81,19 +81,16 @@ impl<E> TransferCircuit<E>
             cs.namespace(|| "allocate account id"),
             || self.account_id_from.ok_or(SynthesisError::AssignmentMissing),
         )?;
-        account_id_alloc_from.inputize(cs.namespace(|| "input account id"))?;
 
         let account_id_alloc_to = AllocatedNum::alloc(
             cs.namespace(|| "allocate account id"),
             || self.account_id_to.ok_or(SynthesisError::AssignmentMissing),
         )?;
-        account_id_alloc_to.inputize(cs.namespace(|| "input account id"))?;
 
         let amount_alloc = AllocatedNum::alloc(
             cs.namespace(|| "allocate amount"),
             || self.amount.ok_or(SynthesisError::AssignmentMissing),
         )?;
-        amount_alloc.inputize(cs.namespace(|| "input amount"))?;
 
         let nonce_alloc = AllocatedNum::alloc(
             cs.namespace(|| "allocate nonce"),
@@ -152,29 +149,29 @@ impl<E> TransferCircuit<E>
         // check amount
 
         cs.enforce(
-            || "check amount transfer",
-            |lc| lc + account_circuit_from.accounts_tree.old_leaf_alloc[0].get_variable(),
+            || "check amount transfer from",
+            |lc| lc + account_circuit_from.accounts_tree.old_leaf_alloc[3].get_variable(),
             |lc| lc + CS::one(),
-            |lc| lc + account_circuit_from.accounts_tree.new_leaf_alloc[0].get_variable()
+            |lc| lc + account_circuit_from.accounts_tree.new_leaf_alloc[3].get_variable()
                 + amount_alloc.get_variable(),
         );
 
         cs.enforce(
-            || "check amount transfer",
-            |lc| lc + account_circuit_to.accounts_tree.old_leaf_alloc[0].get_variable()
+            || "check amount transfer to",
+            |lc| lc + account_circuit_to.accounts_tree.old_leaf_alloc[3].get_variable()
                 + amount_alloc.get_variable(),
             |lc| lc + CS::one(),
-            |lc| lc + account_circuit_to.accounts_tree.new_leaf_alloc[0].get_variable(),
+            |lc| lc + account_circuit_to.accounts_tree.new_leaf_alloc[3].get_variable(),
         );
 
         // check balance for overflow
 
-        account_circuit_from.accounts_tree.new_leaf_alloc[0].limit_number_of_bits(
+        account_circuit_from.accounts_tree.new_leaf_alloc[3].limit_number_of_bits(
             cs.namespace(|| "check from balance overflow"),
             mem::size_of::<usize>() * BITS_IN_BYTE,
         )?;
 
-        account_circuit_to.accounts_tree.new_leaf_alloc[0].limit_number_of_bits(
+        account_circuit_to.accounts_tree.new_leaf_alloc[3].limit_number_of_bits(
             cs.namespace(|| "check to balance overflow"),
             mem::size_of::<usize>() * BITS_IN_BYTE,
         )?;
