@@ -1,0 +1,13 @@
+[package]
+name = "openplasma_circuits"
+version = "0.1.0"
+edition = "2018"
+
+[dependencies]
+hex = "0.3.2"
+rand = "0.4"
+
+pairing_ce = "0.18.0"
+sapling-crypto_ce = "0.1.2"
+ff_ce = "0.7.1"
+bellman_ce = "=0.3.1"
