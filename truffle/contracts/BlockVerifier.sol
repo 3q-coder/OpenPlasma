@@ -59,9 +59,9 @@ contract BlockVerifier is Claimable
         } else if (blockType == PlasmaData.BlockType.TRANSFER) {
             vkGammaAbcLength = 6;
         } else if (blockType == PlasmaData.BlockType.OFFCHAIN_WITHDRAWAL) {
-            vkGammaAbcLength = 18;
+            vkGammaAbcLength = 10;
         } else if (blockType == PlasmaData.BlockType.ONCHAIN_WITHDRAWAL) {
-            vkGammaAbcLength = 22;
+            vkGammaAbcLength = 18;
         } else {
             revert("UNSUPPORTED_BLOCK_TYPE");
         }

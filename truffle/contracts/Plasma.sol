@@ -7,7 +7,7 @@ import "./BlockVerifier.sol";
 import "./lib/MathUint.sol";
 import "./lib/BytesUtil.sol";
 
-contract DEX is BlockVerifier
+contract Plasma is BlockVerifier
 {
     PlasmaData.State private state;
 
@@ -24,7 +24,7 @@ contract DEX is BlockVerifier
         onlyOwner
     {
         // require(genesisBlockHash != 0, "ZERO_GENESIS_BLOCK_HASH");
-        uint genesisBlockHash = 0x2bac0e85c5856a4045bec41f225b07b24f6130f6a6d242f49d6afe9feb0b9922;
+        uint genesisBlockHash = 0x301861ce8f6c3f567c916965d05ec8b40955f3b61fd2d1499f6b84ff64031724;
 
         // create genesis block
         PlasmaData.Block memory genesisBlock = PlasmaData.Block(
@@ -132,7 +132,6 @@ contract DEX is BlockVerifier
             //                           // the Account leaf with the data given onchain.
             //         account.pubKeyY,
             //         accountId,
-            //         tokenId,
             //         amount
             //     )
             // ),
@@ -305,8 +304,8 @@ contract DEX is BlockVerifier
         // Get the current block
         PlasmaData.Block storage prevBlock = state.blocks[state.blocks.length - 1];
 
-        require(merkleRootBefore == prevBlock.blockData.merkleRootAfter, "INVALID_MERKLE_ROOT");
-        require(merkleRootAfter < PlasmaData.SNARK_SCALAR_FIELD(), "INVALID_MERKLE_ROOT");
+        require(merkleRootBefore == prevBlock.blockData.merkleRootAfter, "INVALID_MERKLE_ROOT BEFORE");
+        require(merkleRootAfter < PlasmaData.SNARK_SCALAR_FIELD(), "INVALID_MERKLE_ROOT AFTER");
 
         if (blockType == PlasmaData.BlockType.DEPOSIT) {
             require (startIdx == state.numDepositRequestsCommitted, "INVALID_REQUEST_RANGE");
@@ -417,7 +416,7 @@ contract DEX is BlockVerifier
                 "INVALID_PROOF"
             );
         } else if (blockType == PlasmaData.BlockType.OFFCHAIN_WITHDRAWAL) {
-            uint publicInputsLength = 2 + 3*specifiedBlock.blockData.withdrawalsLength;
+            uint publicInputsLength = 2 + 2*specifiedBlock.blockData.withdrawalsLength;
             uint[] memory publicInputs = new uint[](publicInputsLength);
             publicInputs[0] = specifiedBlock.blockData.merkleRootBefore;
             publicInputs[1] = specifiedBlock.blockData.merkleRootAfter;
@@ -435,7 +434,7 @@ contract DEX is BlockVerifier
                 "INVALID_PROOF"
             );
         } else if (blockType == PlasmaData.BlockType.ONCHAIN_WITHDRAWAL) {
-            uint publicInputsLength = 4 + 3*specifiedBlock.blockData.withdrawalsLength;
+            uint publicInputsLength = 4 + 2*specifiedBlock.blockData.withdrawalsLength;
             uint[] memory publicInputs = new uint[](publicInputsLength);
             publicInputs[0] = state.withdrawalChain[specifiedBlock.blockData.startIdx].accumulatedHash;
             publicInputs[1] = state.withdrawalChain[specifiedBlock.blockData.startIdx + specifiedBlock.blockData.count].accumulatedHash;
