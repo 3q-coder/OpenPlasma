@@ -264,14 +264,31 @@ pub fn happy_path() {
     };
     oper.add_deposit(deposit_taker.clone()).unwrap();
 
+    println!("Deposit circuit ------------------------");
+
+    println!("pubkey 0: {:?}", pubkey_maker.0.into_xy());
+    println!("pubkey 1: {:?}", pubkey_taker.0.into_xy());
+
     let (public_inputs, proof) = oper.execute_deposit_batch().unwrap();
+
+    println!("last deposit hash: {:?}", oper.deposit_accum_hash);
+
+    println!("public inputs: {:?}", public_inputs);
+    println!("proof: {:?}", proof);
 
     // check deposit proof
 
     let verifying_key = prepare_verifying_key(&dep_params.vk);
 
+    println!("verification key alpha_g1: {:?}", dep_params.vk.alpha_g1);
+    println!("verification key beta_g2: {:?}", dep_params.vk.beta_g2);
+    println!("verification key gamma_g2: {:?}", dep_params.vk.gamma_g2);
+    println!("verification key delta_g2: {:?}", dep_params.vk.delta_g2);
+    println!("verification key ic: {:?}", dep_params.vk.ic);
+
     let is_valid = verify_proof(&verifying_key, &proof, &public_inputs).unwrap();
     assert!(is_valid);
+    println!("End of deposit circuit ------------------------");
 
     // check after deposit execution
 
@@ -291,11 +308,24 @@ pub fn happy_path() {
     transfer.sign(&seckey_maker, &hash_params, &sign_params);
     oper.add_transfer(transfer.clone()).unwrap();
 
+    println!("Transfer circuit ------------------------");
+
     let (public_inputs, proof) = oper.execute_transfer_batch().unwrap();
+
+    println!("public inputs: {:?}", public_inputs);
+    println!("proof: {:?}", proof);
 
     // check transfer batch proof
 
     let verifying_key = prepare_verifying_key(&transfer_params.vk);
+
+    println!("verification key alpha_g1: {:?}", transfer_params.vk.alpha_g1);
+    println!("verification key beta_g2: {:?}", transfer_params.vk.beta_g2);
+    println!("verification key gamma_g2: {:?}", transfer_params.vk.gamma_g2);
+    println!("verification key delta_g2: {:?}", transfer_params.vk.delta_g2);
+    println!("verification key ic: {:?}", transfer_params.vk.ic);
+
+    println!("End of transfer circuit ------------------------");
 
     let is_valid = verify_proof(&verifying_key, &proof, &public_inputs).unwrap();
     assert!(is_valid);
@@ -320,10 +350,21 @@ pub fn happy_path() {
     oper.add_offchain_withdrawal(withdrawal).unwrap();
 
     let (public_inputs, proof) = oper.execute_offchain_withdrawal_batch().unwrap();
+    
+    println!("Offchain withdrawal circuit ------------------------");
+    println!("public inputs: {:?}", public_inputs);
+    println!("proof: {:?}", proof);
 
     // check proof
 
     let verifying_key = prepare_verifying_key(&of_w_params.vk);
+
+    println!("verification key alpha_g1: {:?}", of_w_params.vk.alpha_g1);
+    println!("verification key beta_g2: {:?}", of_w_params.vk.beta_g2);
+    println!("verification key gamma_g2: {:?}", of_w_params.vk.gamma_g2);
+    println!("verification key delta_g2: {:?}", of_w_params.vk.delta_g2);
+    println!("verification key ic: {:?}", of_w_params.vk.ic);
+    println!("End of offchain withdrawal circuit ------------------------");
 
     let is_valid = verify_proof(&verifying_key, &proof, &public_inputs).unwrap();
     assert!(is_valid);
@@ -346,9 +387,21 @@ pub fn happy_path() {
 
     let (public_inputs, proof) = oper.execute_onchain_withdrawal_batch().unwrap();
 
+    println!("Onchain withdrawal circuit ------------------------");
+    println!("public inputs: {:?}", public_inputs);
+    println!("proof: {:?}", proof);
+    println!("last withdrawal hash: {:?}", oper.withdrawal_accum_hash);
+
     // check proof
 
     let verifying_key = prepare_verifying_key(&on_w_params.vk);
+
+    println!("verification key alpha_g1: {:?}", on_w_params.vk.alpha_g1);
+    println!("verification key beta_g2: {:?}", on_w_params.vk.beta_g2);
+    println!("verification key gamma_g2: {:?}", on_w_params.vk.gamma_g2);
+    println!("verification key delta_g2: {:?}", on_w_params.vk.delta_g2);
+    println!("verification key ic: {:?}", on_w_params.vk.ic);
+    println!("End of onchain withdrawal circuit ------------------------");
 
     let is_valid = verify_proof(&verifying_key, &proof, &public_inputs).unwrap();
     assert!(is_valid);
